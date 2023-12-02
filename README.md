@@ -84,5 +84,4 @@ Purchases.product_id связан с Products.product_id
 
 ### ER-диаграмма:
 
-![](C:\Users\User\Documents\GitHub\1st-project\erd.drawio.png)
-123
+![](erd.drawio.png)
