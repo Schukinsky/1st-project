@@ -1,69 +1,69 @@
 ## Концептуальная модель базы данных для интернет-магазина
 ### Сущности:
 
-##### 1. Продукты (Products):
+##### 1. Продукты (Product):
 
-- product_id (Primary Key)
+- id (Primary Key)
 - name (название продукта)
 - description (описание продукта)
-- category_id (внешний ключ, связанный с таблицей Categories)
-- manufacturer_id (внешний ключ, связанный с таблицей Manufacturers)
-- supplier_id (внешний ключ, связанный с таблицей Suppliers)
+- FK_category (внешний ключ, связанный с таблицей Сategory)
+- FK_manufacturer (внешний ключ, связанный с таблицей Manufacturer)
+- FK_supplier (внешний ключ, связанный с таблицей Supplier)
 - quantity (количество продукта)
 
-##### 2. Категории продуктов (Categories):
+##### 2. Категории продуктов (Сategory):
 
-- category_id (Primary Key)
+- id (Primary Key)
 - name (название категории)
 
-##### 3. Цены (Prices):
+##### 3. Цены (Price):
 
-- price_id (Primary Key)
-- product_id (внешний ключ, связанный с таблицей Products)
+- id (Primary Key)
+- FK_product (внешний ключ, связанный с таблицей Product)
 - price (цена продукта)
 - start_date (дата начала действия цены)
 - end_date (дата окончания действия цены)
 
-##### 4. Поставщики (Suppliers):
+##### 4. Поставщики (Supplier):
 
-- supplier_id (Primary Key)
+- id (Primary Key)
 - name (название поставщика)
 - contact_info (контактная информация)
 
-##### 5. Производители (Manufacturers):
+##### 5. Производители (Manufacturer):
 
-- manufacturer_id (Primary Key)
+- id (Primary Key)
 - name (название производителя)
 
-##### 6. Покупатели (Customers):
+##### 6. Покупатели (Customer):
 
-- customer_id (Primary Key)
+- id (Primary Key)
 - name (имя покупателя)
 - email (электронная почта покупателя)
 - phone (контактный телефон)
 - address (адрес доставки)
 
-##### 7. Покупки (Purchases):
+##### 7. Покупки (Purchase):
 
-- purchase_id (Primary Key)
-- customer_id (внешний ключ, связанный с таблицей Customers)
-- product_id (внешний ключ, связанный с таблицей Products)
+- id (Primary Key)
+- FK_customer (внешний ключ, связанный с таблицей Customer)
+- FK_product (внешний ключ, связанный с таблицей Product)
 - quantity (количество купленных продуктов)
 - purchase_date (дата покупки)
 
 ### Связи:
 
-Products.category_id связан с Categories.category_id
+Product.FK_category связан с Сategory.id
 
-Products.manufacturer_id связан с Manufacturers.manufacturer_id
+Product.FK_manufacturer связан с Manufacturer.id
 
-Products.supplier_id связан с Suppliers.supplier_id
+Product.FK_supplier связан с Supplier.id
 
-Prices.product_id связан с Products.product_id
+Price.FK_product связан с Product.id
 
-Purchases.customer_id связан с Customers.customer_id
+Purchase.FK_customer связан с Customer.id
 
-Purchases.product_id связан с Products.product_id
+Purchase.FK_product связан с Product.id
 
 ### Бизнес-задачи:
 
