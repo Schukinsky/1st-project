@@ -122,3 +122,41 @@ Order.FK_status связан с Status.id
 - Запрос на получение данных о клиентах (например: информация о покупках, контактные данные).
 - Запрос на поиск всех заказов, сделанных за определенный период времени.
 - Запрос на поиск всех заказов определенного статуса (выполненных, отмененных и т. д.).
+
+| Поле                    | Тип поля        | Кардинальность | Ограничения       | Индексы         |
+|:----------------------- |:---------------:|:--------------:|:-----------------:|:---------------:|
+| Product.id              | PRIMARY KEY     |       -        |*UNIQUE + NOT NULL |*                |
+| Product.name            |                 | Высокая        | NOT NULL          |                 |
+| Product.description     |                 | Высокая        | NOT NULL          |                 | 
+| Product.FK_category     | FOREIGN KEY     |       -        |                   |                 |
+| Product.FK_manufacturer | FOREIGN KEY     |       -        |                   |                 |
+| Product.FK_supplier     | FOREIGN KEY     |       -        |                   |                 |
+| Product.quantity        |                 | Высокая        | NOT NULL          |                 |
+| Сategory.id             | PRIMARY KEY     |       -        |*UNIQUE + NOT NULL |*                |
+| Сategory.name           |                 | Низкая         | NOT NULL                            |                 |
+| Price.id                | PRIMARY KEY     |       -        |*UNIQUE + NOT NULL |*                |
+| Price.FK_product        | FOREIGN KEY     |       -        |                   |                 |
+| Price.price             |                 | Высокая        | NOT NULL          |                 |
+| Price.start_date        |                 | Высокая        | NOT NULL          |                 |
+| Price.end_date          |                 | Высокая        | CHECK(>start_date)|                 |
+| Supplier.id             | PRIMARY KEY     |       -        |*UNIQUE + NOT NULL |*                |
+| Supplier.name           |                 | Высокая        | UNIQUE, NOT NULL  |                 |
+| Supplier.contact_info   |                 | Высокая        | NOT NULL          |                 |
+| Manufacturer.id         | PRIMARY KEY     |       -        |*UNIQUE + NOT NULL |*                |
+| Manufacturer.name       |                 |Низкая, среднняя| UNIQUE, NOT NULL  |                 |
+| Customer.id             | PRIMARY KEY     |       -        |*UNIQUE + NOT NULL |*                |
+| Customer.name           |                 | Высокая        | NOT NULL          |                 |
+| Customer.email          |                 | Высокая        | NOT NULL          |                 |
+| Customer.phone          |                 | Высокая        | NOT NULL          |                 |
+| Purchase.FK_order       | FOREIGN KEY     |       -        |                   |                 |
+| Purchase.FK_product     | FOREIGN KEY     |       -        |                   |                 |
+| Purchase.quantity       |                 |Низкая, среднняя| NOT NULL          |                 |
+| Order.id                | PRIMARY KEY     |       -        |*UNIQUE + NOT NULL |*                |
+| Order.FK_customer       | FOREIGN KEY     |       -        |                   |                 |
+| Order.FK_status         | FOREIGN KEY     |       -        |                   |                 |
+| Order.address           |                 | Высокая        | NOT NULL          |                 |
+| Order.order_date        |                 | Высокая        | NOT NULL          |                 |
+| Status.id               | PRIMARY KEY     |        -       |*UNIQUE + NOT NULL |*                |
+| Status.name             |                 | Низкая         | UNIQUE, NOT NULL  |                 |
+
+'*' Ограничения/индексы по умолчанию, накладываемые типом поля  
