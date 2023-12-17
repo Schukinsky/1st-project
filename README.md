@@ -123,51 +123,52 @@ Order.FK_status связан с Status.id
 - Запрос на поиск всех заказов определенного статуса (выполненных, отмененных и т. д.).
 
 ### Индексы:
-- idx_Product_name  - индекс на поле name таблицы Product позволит ускорить вывод всех продуктов с определенным названием или отсортировать их по алфавиту;
-- idx_Product_description - индекс на поле description таблицы Product позволит ускорить вывод всех продуктов по определенному описанию;
-- idx_Product_FK_category - индекс на поле FK_category таблицы Product позволит ускорить вывод всех продуктов определенной категории;
-- idx_Product_FK_manufacturer - индекс на поле FK_manufacturer таблицы Product позволит ускорить вывод всех продуктов определенного бренда;
-- idx_Price_price -индекс на поле price таблицы Price позволит ускорить вывод всех продуктов с определенной ценой или ценовым диапазоном;
-- idx_Price_end_date_FK_product - составной индекс на поля end_date и FK_product таблицы Price позволит ускорить выполнение запроса определения актуальной цены;
-- idx_Order_order_date - индекс на поле order_date таблицы Order позволит ускорить выполнение запроса на получение отчета о продаж за определенный период времени;
-- idx_Purchase_quantity - индекс на поле quantity таблицы Purchase позволит ускорить выполнение запроса на получение отчета о наиболее популярных товарах;
-- idx_Product_quantity - индекс на поле quantity таблицы Purchase позволит ускорить выполнение запроса на получение отчета о продуктах с минимальным остатком на складе;
-- idx_Order_FK_customer - индекс на поле quantity таблицы Purchase позволит ускорить выполнение запроса на получение данных о заказах, сделанных определенным клиентом.
+- **idx_Product_name**  - индекс на поле **name** таблицы **Product** позволит ускорить вывод всех продуктов с определенным названием или отсортировать их по алфавиту;
+- **idx_Product_description** - индекс на поле **description** таблицы **Product** позволит ускорить вывод всех продуктов по определенному описанию;
+- **idx_Product_FK_category** - индекс на поле **FK_category** таблицы **Product** позволит ускорить вывод всех продуктов определенной категории;
+- **idx_Product_FK_manufacturer** - индекс на поле **FK_manufacturer** таблицы **Product** позволит ускорить вывод всех продуктов определенного бренда;
+- **idx_Price_end_date_FK_product** - составной индекс на поля **end_date** и **FK_product** таблицы **Price** позволит ускорить вывод всех продуктов с определенной ценой или ценовым диапазоном и выполнение запроса определения актуальной цены;
+- **idx_Order_order_date** - индекс на поле **order_date** таблицы **Order** позволит ускорить выполнение запроса на получение отчета о продаж за определенный период времени;
+- **idx_Purchase_quantity** - индекс на поле **quantity** таблицы **Purchase** позволит ускорить выполнение запроса на получение отчета о наиболее популярных товарах;
+- **idx_Product_quantity** - индекс на поле **quantity** таблицы **Product** позволит ускорить выполнение запроса на получение отчета о продуктах с минимальным остатком на складе;
+- **idx_Order_FK_customer** - индекс на поле **FK_customer** таблицы **Order** позволит ускорить выполнение запроса на получение данных о заказах, сделанных определенным клиентом.
 
-| Поле                    | Тип поля        | Кардинальность | Ограничения       | Индексы         |
+### Кардинальность - Ограничения - Индексы
+
+| Поле                    | PK/FK           | Кардинальность | Ограничения       | Индексы         |
 |:----------------------- |:---------------:|:--------------:|:-----------------:|:---------------:|
-| Product.id              | PRIMARY KEY     |       -        |*UNIQUE + NOT NULL |*                |
-| Product.name            |                 | Высокая        | NOT NULL          |                 |
-| Product.description     |                 | Высокая        | NOT NULL          |                 | 
-| Product.FK_category     | FOREIGN KEY     |       -        |                   |                 |
-| Product.FK_manufacturer | FOREIGN KEY     |       -        |                   |                 |
-| Product.FK_supplier     | FOREIGN KEY     |       -        |                   |                 |
-| Product.quantity        |                 | Высокая        | NOT NULL          |                 |
-| Сategory.id             | PRIMARY KEY     |       -        |*UNIQUE + NOT NULL |*                |
-| Сategory.name           |                 | Низкая         | NOT NULL                            |                 |
-| Price.id                | PRIMARY KEY     |       -        |*UNIQUE + NOT NULL |*                |
-| Price.FK_product        | FOREIGN KEY     |       -        |                   |                 |
-| Price.price             |                 | Высокая        | NOT NULL          |                 |
+| Product.id              | PRIMARY KEY     | Высокая        |*UNIQUE + NOT NULL |*                |
+| Product.name            |                 | Высокая        | NOT NULL          |idx_Product_name |
+| Product.description     |                 | Высокая        | NOT NULL          |idx_Product_description| 
+| Product.FK_category     | FOREIGN KEY     |Низкая, среднняя| NOT NULL          |idx_Product_FK_category|
+| Product.FK_manufacturer | FOREIGN KEY     |Низкая, среднняя| NOT NULL          |idx_Product_FK_manufacturer|
+| Product.FK_supplier     | FOREIGN KEY     |Низкая, среднняя | NOT NULL          |                 |
+| Product.quantity        |                 | Высокая        | NOT NULL          |idx_Product_quantity|
+| Сategory.id             | PRIMARY KEY     |Низкая, среднняя|*UNIQUE + NOT NULL |*                |
+| Сategory.name           |                 |Низкая, среднняя| NOT NULL          |                 |
+| Price.id                | PRIMARY KEY     | Высокая        |*UNIQUE + NOT NULL |*                |
+| Price.FK_product        | FOREIGN KEY     | Высокая        | NOT NULL          |                 |
+| Price.price             |                 | Высокая        | NOT NULL          |idx_Price_end_date_FK_product|
 | Price.start_date        |                 | Высокая        | NOT NULL          |                 |
-| Price.end_date          |                 | Высокая        | CHECK(>start_date)|                 |
-| Supplier.id             | PRIMARY KEY     |       -        |*UNIQUE + NOT NULL |*                |
-| Supplier.name           |                 | Высокая        | UNIQUE, NOT NULL  |                 |
-| Supplier.contact_info   |                 | Высокая        | NOT NULL          |                 |
-| Manufacturer.id         | PRIMARY KEY     |       -        |*UNIQUE + NOT NULL |*                |
+| Price.end_date          |                 | Высокая        | CHECK(>start_date)|idx_Price_end_date_FK_product|
+| Supplier.id             | PRIMARY KEY     |Низкая, среднняя|*UNIQUE + NOT NULL |*                |
+| Supplier.name           |                 |Низкая, среднняя| UNIQUE, NOT NULL  |                 |
+| Supplier.contact_info   |                 |Низкая, среднняя| NOT NULL          |                 |
+| Manufacturer.id         | PRIMARY KEY     |Низкая, среднняя|*UNIQUE + NOT NULL |*                |
 | Manufacturer.name       |                 |Низкая, среднняя| UNIQUE, NOT NULL  |                 |
-| Customer.id             | PRIMARY KEY     |       -        |*UNIQUE + NOT NULL |*                |
+| Customer.id             | PRIMARY KEY     | Высокая        |*UNIQUE + NOT NULL |*                |
 | Customer.name           |                 | Высокая        | NOT NULL          |                 |
 | Customer.email          |                 | Высокая        | NOT NULL          |                 |
 | Customer.phone          |                 | Высокая        | NOT NULL          |                 |
-| Purchase.FK_order       | FOREIGN KEY     |       -        |                   |                 |
-| Purchase.FK_product     | FOREIGN KEY     |       -        |                   |                 |
-| Purchase.quantity       |                 |Низкая, среднняя| NOT NULL          |                 |
-| Order.id                | PRIMARY KEY     |       -        |*UNIQUE + NOT NULL |*                |
-| Order.FK_customer       | FOREIGN KEY     |       -        |                   |                 |
-| Order.FK_status         | FOREIGN KEY     |       -        |                   |                 |
+| Purchase.FK_order       | PRIMARY KEY     | Высокая        | NOT NULL          |                 |
+| Purchase.FK_product     | PRIMARY KEY     | Высокая        | NOT NULL          |                 |
+| Purchase.quantity       |                 | Высокая        |NOT NULL,CHECK >= 0|idx_Purchase_quantity|
+| Order.id                | PRIMARY KEY     | Высокая        |*UNIQUE + NOT NULL |*                |
+| Order.FK_customer       | FOREIGN KEY     | Высокая        | NOT NULL          |idx_Order_FK_customer|
+| Order.FK_status         | FOREIGN KEY     | Низкая         | NOT NULL          |                 |
 | Order.address           |                 | Высокая        | NOT NULL          |                 |
-| Order.order_date        |                 | Высокая        | NOT NULL          |                 |
-| Status.id               | PRIMARY KEY     |        -       |*UNIQUE + NOT NULL |*                |
+| Order.order_date        |                 | Высокая        | NOT NULL          |idx_Order_order_date|
+| Status.id               | PRIMARY KEY     | Низкая         |*UNIQUE + NOT NULL |*                |
 | Status.name             |                 | Низкая         | UNIQUE, NOT NULL  |                 |
 
-'*' Ограничения/индексы по умолчанию, накладываемые типом поля  
+'*' Ограничения/индексы по умолчанию, накладываемые PRIMARY/FOREIGN KEY  
