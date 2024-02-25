@@ -92,19 +92,98 @@ mysql> CREATE DATABASE benchmark;
 mysql> use benchmark;
 
 Подготавливаем таблицу в базе данных 'benchmark' для тестирования с Sysbench
-sysbench --mysql-host=0.0.0.0 --mysql-user=root --mysql-password='12345' --
-db-driver=mysql --mysql-db=benchmark /usr/share/sysbench/oltp_read_write.lua
-prepare
+sysbench --mysql-host=0.0.0.0 --mysql-port=3309 --mysql-user=root --mysql-password='12345' --db-driver=mysql --mysql-db=benchmark /usr/share/sysbench/oltp_read_write.lua prepare
+select * from sbtest1;
+show create table sbtest1;
 
-root@ubuntusrv:/# sysbench --mysql-host=0.0.0.0 --mysql-user=root --mysql-password='12345' --
-db-driver=mysql --mysql-db=benchmark /usr/share/sysbench/oltp_read_write.lua prepare
-sysbench 1.0.20 (using system LuaJIT 2.1.0-beta3)
+Запускаем тест производительности с использованием InnoDB
+sysbench --mysql-host=0.0.0.0 --mysql-port=3309 --mysql-user=root --mysql-password='12345' --db-driver=mysql --mysql-db=benchmark /usr/share/sysbench/oltp_read_write.lua run
 
-Reading the script from the standard input:
+SQL statistics:
+    queries performed:
+        read:                            5180
+        write:                           1480
+        other:                           740
+        total:                           7400
+    transactions:                        370    (36.95 per sec.)
+    queries:                             7400   (738.94 per sec.)
+    ignored errors:                      0      (0.00 per sec.)
+    reconnects:                          0      (0.00 per sec.)
 
-На этом все остановилось, таблица не создалась почему-то (((
+General statistics:
+    total time:                          10.0113s
+    total number of events:              370
 
+Latency (ms):
+         min:                                   24.91
+         avg:                                   27.03
+         max:                                   38.83
+         95th percentile:                       28.67
+         sum:                                10001.19
 
+Threads fairness:
+    events (avg/stddev):           370.0000/0.00
+    execution time (avg/stddev):   10.0012/0.00
 
+Меняем движок хранения таблицы на MyISAM и запускаем тест
+ALTER TABLE sbtest1 ENGINE=MyISAM;
+show create table sbtest1;
+sysbench --mysql-host=0.0.0.0 --mysql-port=3309 --mysql-user=root --mysql-password='12345' --db-driver=mysql --mysql-db=benchmark /usr/share/sysbench/oltp_read_write.lua run
 
-	
+SQL statistics:
+    queries performed:
+        read:                            4550
+        write:                           1300
+        other:                           650
+        total:                           6500
+    transactions:                        325    (32.46 per sec.)
+    queries:                             6500   (649.15 per sec.)
+    ignored errors:                      0      (0.00 per sec.)
+    reconnects:                          0      (0.00 per sec.)
+
+General statistics:
+    total time:                          10.0105s
+    total number of events:              325
+
+Latency (ms):
+         min:                                   29.52
+         avg:                                   30.78
+         max:                                   66.99
+         95th percentile:                       31.94
+         sum:                                10002.94
+
+Threads fairness:
+    events (avg/stddev):           325.0000/0.00
+    execution time (avg/stddev):   10.0029/0.00
+
+Меняем  движок хранения таблицы на MEMORY и запустить тест
+ALTER TABLE sbtest1 ENGINE=MEMORY;
+show create table sbtest1;
+sysbench --mysql-host=0.0.0.0 --mysql-port=3309 --mysql-user=root --mysql-password='12345' --db-driver=mysql --mysql-db=benchmark /usr/share/sysbench/oltp_read_write.lua run
+
+SQL statistics:
+    queries performed:
+        read:                            2492
+        write:                           712
+        other:                           356
+        total:                           3560
+    transactions:                        178    (17.78 per sec.)
+    queries:                             3560   (355.52 per sec.)
+    ignored errors:                      0      (0.00 per sec.)
+    reconnects:                          0      (0.00 per sec.)
+
+General statistics:
+    total time:                          10.0109s
+    total number of events:              178
+
+Latency (ms):
+         min:                                   55.09
+         avg:                                   56.21
+         max:                                   58.76
+         95th percentile:                       56.84
+         sum:                                10005.14
+
+Threads fairness:
+    events (avg/stddev):           178.0000/0.00
+    execution time (avg/stddev):   10.0051/0.00
+
