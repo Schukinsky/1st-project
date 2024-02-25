@@ -1,0 +1,110 @@
+1. Cоздаем дирикторию mysql
+mkdir /home/user/mysql 
+
+2. Копируем файл docker-compose.yml в /home/user/mysql из репозитория
+
+3. Создаем файл init.sql 
+CREATE DATABASE Store;
+USE Store;
+CREATE TABLE category (id int primary key auto_increment, name varchar(32));
+INSERT INTO category (name) VALUES 
+	('Пилы'),
+	('Дрели, шуруповерты'),
+	('Биты и торцевые головки'),
+	('Перфораторы'),
+	('Отбойные молотки'),
+	('Миксеры строительные'),
+	('Шлифовальные машины'),
+	('Фрезеры'),
+	('Электролобзики'),
+	('Многофункциональный инструмент'),
+	('Электрорубанки'),
+	('Строительные фены'),
+	('Паяльники'),
+	('Строительные степлеры')
+;
+
+4. Разворачиваем контейнер с mysql
+docker-compose up otusdb 
+
+*Дополнительные команды:
+удаление
+cd /home/user/mysql
+docker-compose stop
+docker-compose down -v --rmi all --remove-orphans
+
+5.Проверяем работу контейнера
+docker-compose ps
+
+6. Подключаемся к базе данных из консоли
+mysql -u root -p12345 --port=3309 --protocol=tcp Store
+
+7. Проверяем созданные таблицы и выводим все строки из таблицы category
+mysql> SHOW tables;
+mysql> select * from category;
+
+8. Подключаемся к базе данных с помощью DBeaver
+Ошибка "Public Key Retrieval is not allowed"
+в свойстве драйвера устанавливаем allowPublicKeyRetrieval=TRUE
+
+9. Проверяем созданные таблицы и выводим все строки из таблицы category
+
+10. Изменяем значение innodb_buffer_pool_size на 256 Mbyte
+mysql> SELECT @@innodb_buffer_pool_size;
++---------------------------+
+| @@innodb_buffer_pool_size |
++---------------------------+
+|                 134217728 |
++---------------------------+
+
+mysql> SET GLOBAL innodb_buffer_pool_size=268435456;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT @@innodb_buffer_pool_size;
++---------------------------+
+| @@innodb_buffer_pool_size |
++---------------------------+
+|                 268435456 |
++---------------------------+
+
+11. Ограничем  максимальное количество одновременных соединений с сервером MySQL до 5
+SELECT @@max_connections;
+mysql> SELECT @@max_connections;
++-------------------+
+| @@max_connections |
++-------------------+
+|               151 |
++-------------------+
+
+mysql> SELECT @@max_connections;
++-------------------+
+| @@max_connections |
++-------------------+
+|                 5 |
++-------------------+
+
+12. Тестирование Sysbench
+Установить Sysbench
+apt install sysbench -y
+
+Создаем базу данных benchmark
+mysql> CREATE DATABASE benchmark;
+mysql> use benchmark;
+
+Подготавливаем таблицу в базе данных 'benchmark' для тестирования с Sysbench
+sysbench --mysql-host=0.0.0.0 --mysql-user=root --mysql-password='12345' --
+db-driver=mysql --mysql-db=benchmark /usr/share/sysbench/oltp_read_write.lua
+prepare
+
+root@ubuntusrv:/# sysbench --mysql-host=0.0.0.0 --mysql-user=root --mysql-password='12345' --
+db-driver=mysql --mysql-db=benchmark /usr/share/sysbench/oltp_read_write.lua prepare
+sysbench 1.0.20 (using system LuaJIT 2.1.0-beta3)
+
+Reading the script from the standard input:
+
+На этом все остановилось, таблица не создалась почему-то (((
+
+
+
+
+	
