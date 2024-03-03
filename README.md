@@ -133,42 +133,42 @@ Order.FK_status связан с Status.id
 - **idx_Product_quantity** - индекс на поле **quantity** таблицы **Product** позволит ускорить выполнение запроса на получение отчета о продуктах с минимальным остатком на складе;
 - **idx_Order_FK_customer** - индекс на поле **FK_customer** таблицы **Order** позволит ускорить выполнение запроса на получение данных о заказах, сделанных определенным клиентом.
 
-### Кардинальность - Ограничения - Индексы
+### Поля базы данных
 
-| Поле                    |PK/FK| Кардинальность | Ограничения       | Индексы                |
-|:----------------------- |:---:|:--------------:|:-----------------:|:----------------------------:|
-| Product.id              | PK  | Высокая        |*UNIQUE + NOT NULL |*                |
-| Product.name            |     | Высокая        | NOT NULL          |idx_Product_name |
-| Product.description     |     | Высокая        | NOT NULL          |idx_Product_description| 
-| Product.FK_category     | FK  |Низкая, среднняя| NOT NULL          |idx_Product_FK_category|
-| Product.FK_manufacturer | FK  |Низкая, среднняя| NOT NULL          |idx_Product_FK_manufacturer|
-| Product.FK_supplier     | FK  |Низкая, среднняя | NOT NULL          |                 |
-| Product.quantity        |     | Высокая        | NOT NULL          |idx_Product_quantity|
-| Сategory.id             | PK  |Низкая, среднняя|*UNIQUE + NOT NULL |*                |
-| Сategory.name           |     |Низкая, среднняя| NOT NULL          |                 |
-| Price.id                | PK  | Высокая        |*UNIQUE + NOT NULL |*                |
-| Price.FK_product        | FK  | Высокая        | NOT NULL          |                 |
-| Price.price             |     | Высокая        | NOT NULL          |idx_Price_end_date_FK_product|
-| Price.start_date        |     | Высокая        | NOT NULL          |                 |
-| Price.end_date          |     | Высокая        | CHECK(>start_date)|idx_Price_end_date_FK_product|
-| Supplier.id             | PK  |Низкая, среднняя|*UNIQUE + NOT NULL |*                |
-| Supplier.name           |     |Низкая, среднняя| UNIQUE, NOT NULL  |                 |
-| Supplier.contact_info   |     |Низкая, среднняя| NOT NULL          |                 |
-| Manufacturer.id         | PK  |Низкая, среднняя|*UNIQUE + NOT NULL |*                |
-| Manufacturer.name       |     |Низкая, среднняя| UNIQUE, NOT NULL  |                 |
-| Customer.id             | PK  | Высокая        |*UNIQUE + NOT NULL |*                |
-| Customer.name           |     | Высокая        | NOT NULL          |                 |
-| Customer.email          |     | Высокая        | NOT NULL          |                 |
-| Customer.phone          |     | Высокая        | NOT NULL          |                 |
-| Purchase.FK_order       | PK  | Высокая        | NOT NULL          |                 |
-| Purchase.FK_product     | PK  | Высокая        | NOT NULL          |                 |
-| Purchase.quantity       |     | Высокая        |NOT NULL,CHECK >= 0|idx_Purchase_quantity|
-| Order.id                | PK  | Высокая        |*UNIQUE + NOT NULL |*                |
-| Order.FK_customer       | FK  | Высокая        | NOT NULL          |idx_Order_FK_customer|
-| Order.FK_status         | FK  | Низкая         | NOT NULL          |                 |
-| Order.address           |     | Высокая        | NOT NULL          |                 |
-| Order.order_date        |     | Высокая        | NOT NULL          |idx_Order_order_date|
-| Status.id               | PK  | Низкая         |*UNIQUE + NOT NULL |*                |
-| Status.name             |     | Низкая         | UNIQUE, NOT NULL  |                 |
+| Поле                    |PK/FK| Тип данных     | Кардинальность | Ограничения       | Индексы                     |
+|:----------------------- |:---:|:--------------:|:--------------:|:-----------------:|:---------------------------:|
+| Product.id              | PK  | SERIAL         | Высокая        |*UNIQUE + NOT NULL |*                            |
+| Product.name            |     | VARCHAR(48)    | Высокая        | NOT NULL          |idx_Product_name             |
+| Product.description     |     | VARCHAR(32)    | Высокая        | NOT NULL          |idx_Product_description      | 
+| Product.FK_category     | FK  | INTEGER        |Низкая, среднняя| NOT NULL          |idx_Product_FK_category      |
+| Product.FK_manufacturer | FK  | INTEGER        |Низкая, среднняя| NOT NULL          |idx_Product_FK_manufacturer  |
+| Product.FK_supplier     | FK  | INTEGER        |Низкая, среднняя| NOT NULL          |                             |
+| Product.quantity        |     | INTEGER        | Высокая        | NOT NULL          |idx_Product_quantity         |
+| Сategory.id             | PK  | SERIAL         |Низкая, среднняя|*UNIQUE + NOT NULL |*                            |
+| Сategory.name           |     | VARCHAR(32)    |Низкая, среднняя| NOT NULL          |                             |
+| Price.id                | PK  | SERIAL         | Высокая        |*UNIQUE + NOT NULL |*                            |
+| Price.FK_product        | FK  | INTEGER        | Высокая        | NOT NULL          |                             |
+| Price.price             |     | DECIMAL(10, 2) | Высокая        | NOT NULL          |idx_Price_end_date_FK_product|
+| Price.start_date        |     | TIMESTAMP      | Высокая        | NOT NULL          |                             |
+| Price.end_date          |     | TIMESTAMP      | Высокая        | CHECK(>start_date)|idx_Price_end_date_FK_product|
+| Supplier.id             | PK  | SERIAL         |Низкая, среднняя|*UNIQUE + NOT NULL |*                            |
+| Supplier.name           |     | VARCHAR(32)    |Низкая, среднняя| UNIQUE, NOT NULL  |                             |
+| Supplier.contact_info   |     | VARCHAR(32)    |Низкая, среднняя| NOT NULL          |                             |
+| Manufacturer.id         | PK  | SERIAL         |Низкая, среднняя|*UNIQUE + NOT NULL |*                            |
+| Manufacturer.name       |     | VARCHAR(32)    |Низкая, среднняя| UNIQUE, NOT NULL  |                             |
+| Customer.id             | PK  | SERIAL         | Высокая        |*UNIQUE + NOT NULL |*                            |
+| Customer.name           |     | VARCHAR(32)    | Высокая        | NOT NULL          |                             |
+| Customer.email          |     | VARCHAR(32)    | Высокая        | NOT NULL          |                             |
+| Customer.phone          |     | VARCHAR(32)    | Высокая        | NOT NULL          |                             |
+| Purchase.FK_order       | PK  | INTEGER        | Высокая        | NOT NULL          |                             |
+| Purchase.FK_product     | PK  | INTEGER        | Высокая        | NOT NULL          |                             |
+| Purchase.quantity       |     | INTEGER        | Высокая        |NOT NULL,CHECK >= 0|idx_Purchase_quantity        |
+| Order.id                | PK  | SERIAL         | Высокая        |*UNIQUE + NOT NULL |*                            |
+| Order.FK_customer       | FK  | INTEGER        | Высокая        | NOT NULL          |idx_Order_FK_customer        |
+| Order.FK_status         | FK  | INTEGER        | Низкая         | NOT NULL          |                             |
+| Order.address           |     | VARCHAR(32)    | Высокая        | NOT NULL          |                             |
+| Order.order_date        |     | TIMESTAMP      | Высокая        | NOT NULL          |idx_Order_order_date         |
+| Status.id               | PK  | SERIAL         | Низкая         |*UNIQUE + NOT NULL |*                            |
+| Status.name             |     | VARCHAR(32)    | Низкая         | UNIQUE, NOT NULL  |                             |
 
 '*' Ограничения/индексы по умолчанию, накладываемые PRIMARY/FOREIGN KEY  
