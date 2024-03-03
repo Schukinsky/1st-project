@@ -1,0 +1,90 @@
+1. В таблицу "Поля базы данных" добавлены типы данных 
+
+| Поле                    |PK/FK| Тип данных     | Кардинальность | Ограничения       | Индексы                     |
+|:----------------------- |:---:|:--------------:|:--------------:|:-----------------:|:---------------------------:|
+| Product.id              | PK  | SERIAL         | Высокая        |*UNIQUE + NOT NULL |*                            |
+| Product.name            |     | VARCHAR(48)    | Высокая        | NOT NULL          |idx_Product_name             |
+| Product.description     |     | VARCHAR(32)    | Высокая        | NOT NULL          |idx_Product_description      | 
+| Product.FK_category     | FK  | INTEGER        |Низкая, среднняя| NOT NULL          |idx_Product_FK_category      |
+| Product.FK_manufacturer | FK  | INTEGER        |Низкая, среднняя| NOT NULL          |idx_Product_FK_manufacturer  |
+| Product.FK_supplier     | FK  | INTEGER        |Низкая, среднняя| NOT NULL          |                             |
+| Product.quantity        |     | INTEGER        | Высокая        | NOT NULL          |idx_Product_quantity         |
+| Сategory.id             | PK  | SERIAL         |Низкая, среднняя|*UNIQUE + NOT NULL |*                            |
+| Сategory.name           |     | VARCHAR(32)    |Низкая, среднняя| NOT NULL          |                             |
+| Price.id                | PK  | SERIAL         | Высокая        |*UNIQUE + NOT NULL |*                            |
+| Price.FK_product        | FK  | INTEGER        | Высокая        | NOT NULL          |                             |
+| Price.price             |     | DECIMAL(10, 2) | Высокая        | NOT NULL          |idx_Price_end_date_FK_product|
+| Price.start_date        |     | TIMESTAMP      | Высокая        | NOT NULL          |                             |
+| Price.end_date          |     | TIMESTAMP      | Высокая        | CHECK(>start_date)|idx_Price_end_date_FK_product|
+| Supplier.id             | PK  | SERIAL         |Низкая, среднняя|*UNIQUE + NOT NULL |*                            |
+| Supplier.name           |     | VARCHAR(32)    |Низкая, среднняя| UNIQUE, NOT NULL  |                             |
+| Supplier.contact_info   |     | VARCHAR(32)    |Низкая, среднняя| NOT NULL          |                             |
+| Manufacturer.id         | PK  | SERIAL         |Низкая, среднняя|*UNIQUE + NOT NULL |*                            |
+| Manufacturer.name       |     | VARCHAR(32)    |Низкая, среднняя| UNIQUE, NOT NULL  |                             |
+| Customer.id             | PK  | SERIAL         | Высокая        |*UNIQUE + NOT NULL |*                            |
+| Customer.name           |     | VARCHAR(32)    | Высокая        | NOT NULL          |                             |
+| Customer.email          |     | VARCHAR(32)    | Высокая        | NOT NULL          |                             |
+| Customer.phone          |     | VARCHAR(32)    | Высокая        | NOT NULL          |                             |
+| Purchase.FK_order       | PK  | INTEGER        | Высокая        | NOT NULL          |                             |
+| Purchase.FK_product     | PK  | INTEGER        | Высокая        | NOT NULL          |                             |
+| Purchase.quantity       |     | INTEGER        | Высокая        |NOT NULL,CHECK >= 0|idx_Purchase_quantity        |
+| Order.id                | PK  | SERIAL         | Высокая        |*UNIQUE + NOT NULL |*                            |
+| Order.FK_customer       | FK  | INTEGER        | Высокая        | NOT NULL          |idx_Order_FK_customer        |
+| Order.FK_status         | FK  | INTEGER        | Низкая         | NOT NULL          |                             |
+| Order.address           |     | VARCHAR(32)    | Высокая        | NOT NULL          |                             |
+| Order.order_date        |     | TIMESTAMP      | Высокая        | NOT NULL          |idx_Order_order_date         |
+| Status.id               | PK  | SERIAL         | Низкая         |*UNIQUE + NOT NULL |*                            |
+| Status.name             |     | VARCHAR(32)    | Низкая         | UNIQUE, NOT NULL  |                             |
+
+2. Добавление поля description типа JSON в таблицу product
+	CREATE TABLE IF NOT EXISTS product (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(48),
+	description JSON,
+		quantity INTEGER
+	);
+	
+Наполнение таблицы product данными:
+	INSERT INTO product (name, description, quantity) VALUES
+	('Пила Zubr ZPT-255-1800PL', '{"weight": "13", "power": 1800, "noise_level": 98}', 11),
+	('Пила Zubr ZPT-210-1600PL', '{"weight": "10", "power": 1600, "noise_level": 98}', 5),
+	('Пила Zubr ZPT-210-1400L', '{"weight": "5.4", "power": 1300, "noise_level": 98}', 13),
+	('Пила Metabo KGS 216 M 619260000', '{"weight": "13.5", "dimensions": [760,475,340], "power": 1500, "noise_level": 104}', 12),
+	('Пила Hammer STL1400', '{"weight": "12", "power": 1400}', 12),
+	('Пила Makita HS7601', '{"weight": "4", "dimensions": [309,232,255], "power": 1200, "noise_level": 98}', 11),
+	('Пила Bosch PTS 10 0603B03400', '{"weight": "26", "dimensions": [620,770,450], "power": 1400, "noise_level": 104}', 13),
+	('Пила Interskol DP-190/1600M', '{"weight": "5.5", "dimensions": [263,348,240], "power": 1600, "noise_level": 108}', 2),
+	('Пила Zubr ZPTK-255-1800', '{"weight": "15", "power": 1800, "noise_level": 108}', 8),
+	('Пила Zubr ZPTK-210-1500', '{"weight": "9", "power": 1500, "noise_level": 112}', 11),
+	('Пила Hitachi C7SS', '{"weight": "3.4", "power": 1050, "noise_level": 103}', 2),
+	('Пила Metabo KGS 305 M 619305000', '{"weight": "19.6", "dimensions": [850,515,615], "noise_level": 104}', 7),
+	('Пила Bosch EasyCut 12 06033C9001', '{"weight": "0.7", "noise_level": 68}', 7),
+	('Пила Metabo KS 216 M Lasercut 619216000', '{"weight": "9.4", "dimensions": [475,465,285], "power": 1350, "noise_level": 100}', 10),
+	('Пила Bort BHK-185U', '{"weight": "4.1", "power": 1500, "noise_level": 111}', 5),
+	('Пила Makita EA3202S40B', '{"weight": "4", "power": 1350, "noise_level": 112}', 11),
+	('Пила Metabo KGS 254 M 602540000', '{"weight": "16.3", "dimensions": [790,515,515], "power": 1800, "noise_level": 106}', 7),
+	('Пила Husqvarna 450 e 15', '{"weight": "5.1", "power": 2400, "noise_level": 115}', 10),
+	('Пила STATUS CP90U', '{"weight": "2.3", "power": 600}', 13),
+	('Пила Makita LS1018L', '{"weight": "19.9", "dimensions": [536,825,633], "noise_level": 103}', 7),
+	('Пила Makita 5008MG', '{"weight": "5.1", "dimensions": [332,243,277], "power": 1800, "noise_level": 100}', 5)
+	;
+	
+Проверка добваления данных:
+	SELECT * FROM product;
+
+Пример 1 запроса с использованием JSON:
+	SELECT
+	name,
+	description->>'$.weight' AS 'вес(кг)',
+	description->>'$.dimensions[0]' AS 'ширина(мм)',
+	description->>'$.dimensions[1]' AS 'высота(мм)',
+	description->>'$.dimensions[2]' AS 'глубина(мм)',
+	description->>'$.power' AS 'мощность(Вт)',
+	description->>'$.noise_level' AS 'уровень шума(Дб)',
+	quantity
+	FROM product;
+
+Пример 2 запроса с использованием JSON:
+	SELECT name,
+	CONCAT(description->>'$.dimensions[0]', 'x', description->>'$.dimensions[1]', 'x', description->>'$.dimensions[2]') AS 'Размеры ШхВхГ (мм)'
+	FROM product WHERE description->>'$.dimensions[0]' IS NOT NULL;
