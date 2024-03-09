@@ -138,8 +138,8 @@ Order.FK_status связан с Status.id
 | Поле                    |PK/FK| Тип данных     | Кардинальность | Ограничения       | Индексы                     |
 |:----------------------- |:---:|:--------------:|:--------------:|:-----------------:|:---------------------------:|
 | Product.id              | PK  | SERIAL         | Высокая        |*UNIQUE + NOT NULL |*                            |
-| Product.name            |     | VARCHAR(48)    | Высокая        | NOT NULL          |idx_Product_name             |
-| Product.description     |     | VARCHAR(32)    | Высокая        | NOT NULL          |idx_Product_description      | 
+| Product.name            |     | VARCHAR(128)   | Высокая        | NOT NULL          |idx_Product_name             |
+| Product.description     |     | VARCHAR(1024)  | Высокая        | NOT NULL          |idx_Product_description      | 
 | Product.FK_category     | FK  | INTEGER        |Низкая, среднняя| NOT NULL          |idx_Product_FK_category      |
 | Product.FK_manufacturer | FK  | INTEGER        |Низкая, среднняя| NOT NULL          |idx_Product_FK_manufacturer  |
 | Product.FK_supplier     | FK  | INTEGER        |Низкая, среднняя| NOT NULL          |                             |
