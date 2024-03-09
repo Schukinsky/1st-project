@@ -44,8 +44,8 @@ CREATE TABLE IF NOT EXISTS store_schema.customer (
 	);
 CREATE TABLE IF NOT EXISTS store_schema.product (
 	id SERIAL PRIMARY KEY,
-	name VARCHAR(32),
-	description VARCHAR(32),
+	name VARCHAR(128),
+	description VARCHAR(1024),
 	FK_category INTEGER REFERENCES store_schema.category(id) ON DELETE CASCADE,
 	FK_manufacturer INTEGER REFERENCES store_schema.manufacturer(id) ON DELETE CASCADE,
 	FK_supplier INTEGER REFERENCES store_schema.supplier(id) ON DELETE CASCADE,
