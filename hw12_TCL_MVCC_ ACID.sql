@@ -1,11 +1,19 @@
-Описать пример транзакции из своего проекта с изменением данных в нескольких таблицах. Реализовать в виде хранимой процедуры.
-Загрузить данные из приложенных в материалах csv.
-Реализовать следующими путями:
-LOAD DATA
+--1. Создаем хранимую процедуру add_purchase на вход принимающую id заказа, id продукта, кол-во продукта. 
+--Внутри транзакции добавляется строка в таблицу purchase и изменяется кол-во оставшегося товара в таблице product с учетом добавленного в purchase
+DELIMITER //
+CREATE PROCEDURE store.add_purchase(IN in_order_id INT, IN in_product_id INT, IN in_quantity INT)
+BEGIN
+INSERT INTO purchase (FK_orders, FK_product, quantity) VALUES (in_order_id, in_product_id, in_quantity);
+UPDATE product SET quantity = quantity - in_quantity WHERE id = in_product_id;
+END //
+DELIMITER ;
+-- проверяем значения до вызова процедуры
+CALL add_purchase(4, 100, 4) ; 
+-- проверяем значения после вызова процедуры
 
-Задание со *: загрузить используя
-mysqlimport
-
+--2. Загрузить данные из приложенных в материалах csv.
+--LOAD DATA:
+-- Создаем таблицу с необходимыми полями:
 CREATE TABLE store_test.test_csv_tbl (
 	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	`Handle` VARCHAR(255) NULL,
@@ -54,23 +62,23 @@ CREATE TABLE store_test.test_csv_tbl (
 	`Variant Weight Unit` VARCHAR(255) NULL,
 	 PRIMARY KEY (`id`));
 	 
+	--В linux внутри контейнера создаем каталог mysql-files и назначем ему права:
+	docker exec -it mysql_otusdb_1 bash
+	cd /var/lib/
+	mkdir mysql-files
+	chown -R mysql:mysql ./mysql-files
 	
+	--В конфигурационном файле mysql /etc/mysql/my.cnf добавляем параметр:
+	secure-file-priv= "/var/lib/mysql-files/" 
 	
-	
-	 
-	--docker exec -it mysql_otusdb_1 bash
-	--cd /var/lib/
-	--mkdir mysql-files
-	--chown -R mysql:mysql ./mysql-files
-	
-	secure-file-priv= "/var/lib/mysql-files/" в файл /etc/mysql/my.cnf
-	
+	--Перезапускаем кластер:
 	cd /home/user/mysql/
 	docker-compose restart
 	
-	--docker cp /home/user/Apparel.csv mysql_otusdb_1:/var/lib/mysql-files/Apparel.csv
+	--копируем файл Apparel.csv в каталог для загрузки:
+	docker cp /home/user/Apparel.csv mysql_otusdb_1:/var/lib/mysql-files/Apparel.csv
 	 
-	 
+	--Загружаем данные из файла:
 	LOAD DATA  INFILE '/var/lib/mysql-files/Apparel.csv' INTO table store_test.test_csv_tbl
 	FIELDS TERMINATED BY ',' ENCLOSED BY '"'
     LINES TERMINATED BY '\n'
